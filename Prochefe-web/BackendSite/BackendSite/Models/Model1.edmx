@@ -1,0 +1,363 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="brugaelModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="administradores">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="senha" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="telefone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="cpf" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="categoria">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="clientes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="cpf" Type="varchar" MaxLength="17" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="senha" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="telefone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="rua" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="numero" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="complemento" Type="varchar" MaxLength="10" />
+          <Property Name="bairro" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="cidade" Type="varchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="funcionarios">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="senha" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="telefone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="cpf" Type="varchar" MaxLength="17" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pedidos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_produto" Type="int" />
+          <Property Name="id_dono" Type="int" Nullable="false" />
+          <Property Name="quantidade" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="produtos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="descricao" Type="varchar(max)" />
+          <Property Name="preco" Type="float" Nullable="false" />
+          <Property Name="id_categoria" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_pedidos_clientes">
+          <End Role="clientes" Type="Self.clientes" Multiplicity="1" />
+          <End Role="pedidos" Type="Self.pedidos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clientes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pedidos">
+              <PropertyRef Name="id_dono" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_pedidos_produtos">
+          <End Role="produtos" Type="Self.produtos" Multiplicity="0..1" />
+          <End Role="pedidos" Type="Self.pedidos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="produtos">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pedidos">
+              <PropertyRef Name="id_produto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_produtos_categoria">
+          <End Role="categoria" Type="Self.categoria" Multiplicity="1" />
+          <End Role="produtos" Type="Self.produtos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categoria">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="produtos">
+              <PropertyRef Name="id_categoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="brugaelModelStoreContainer">
+          <EntitySet Name="administradores" EntityType="Self.administradores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="categoria" EntityType="Self.categoria" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="clientes" EntityType="Self.clientes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="funcionarios" EntityType="Self.funcionarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pedidos" EntityType="Self.pedidos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="produtos" EntityType="Self.produtos" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_pedidos_clientes" Association="Self.FK_pedidos_clientes">
+            <End Role="clientes" EntitySet="clientes" />
+            <End Role="pedidos" EntitySet="pedidos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pedidos_produtos" Association="Self.FK_pedidos_produtos">
+            <End Role="produtos" EntitySet="produtos" />
+            <End Role="pedidos" EntitySet="pedidos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_produtos_categoria" Association="Self.FK_produtos_categoria">
+            <End Role="categoria" EntitySet="categoria" />
+            <End Role="produtos" EntitySet="produtos" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="brugaelModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="administradores">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="login" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="senha" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="telefone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="cpf" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="clientes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="cpf" Type="String" MaxLength="17" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="login" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="senha" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="telefone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="rua" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="numero" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="complemento" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="bairro" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="cidade" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="pedidos" Relationship="Self.FK_pedidos_clientes" FromRole="clientes" ToRole="pedidos" />
+        </EntityType>
+        <EntityType Name="funcionarios">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="login" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="senha" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="telefone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="cpf" Type="String" MaxLength="17" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pedidos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_produto" Type="Int32" />
+          <Property Name="id_dono" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="clientes" Relationship="Self.FK_pedidos_clientes" FromRole="pedidos" ToRole="clientes" />
+          <NavigationProperty Name="produtos" Relationship="Self.FK_pedidos_produtos" FromRole="pedidos" ToRole="produtos" />
+          <Property Name="quantidade" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="produtos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="descricao" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="preco" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="pedidos" Relationship="Self.FK_pedidos_produtos" FromRole="produtos" ToRole="pedidos" />
+          <Property Name="id_categoria" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="categoria" Relationship="brugaelModel.FK_produtos_categoria" FromRole="produtos" ToRole="categoria" />
+        </EntityType>
+        <Association Name="FK_pedidos_clientes">
+          <End Role="clientes" Type="Self.clientes" Multiplicity="1" />
+          <End Role="pedidos" Type="Self.pedidos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clientes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pedidos">
+              <PropertyRef Name="id_dono" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_pedidos_produtos">
+          <End Role="produtos" Type="Self.produtos" Multiplicity="0..1" />
+          <End Role="pedidos" Type="Self.pedidos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="produtos">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pedidos">
+              <PropertyRef Name="id_produto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="brugaelEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="administradores" EntityType="Self.administradores" />
+          <EntitySet Name="clientes" EntityType="Self.clientes" />
+          <EntitySet Name="funcionarios" EntityType="Self.funcionarios" />
+          <EntitySet Name="pedidos" EntityType="Self.pedidos" />
+          <EntitySet Name="produtos" EntityType="Self.produtos" />
+          <AssociationSet Name="FK_pedidos_clientes" Association="Self.FK_pedidos_clientes">
+            <End Role="clientes" EntitySet="clientes" />
+            <End Role="pedidos" EntitySet="pedidos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pedidos_produtos" Association="Self.FK_pedidos_produtos">
+            <End Role="produtos" EntitySet="produtos" />
+            <End Role="pedidos" EntitySet="pedidos" />
+          </AssociationSet>
+          <EntitySet Name="categoria" EntityType="brugaelModel.categoria" />
+          <AssociationSet Name="FK_produtos_categoria" Association="brugaelModel.FK_produtos_categoria">
+            <End Role="categoria" EntitySet="categoria" />
+            <End Role="produtos" EntitySet="produtos" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="categoria">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="produtos" Relationship="brugaelModel.FK_produtos_categoria" FromRole="categoria" ToRole="produtos" />
+        </EntityType>
+        <Association Name="FK_produtos_categoria">
+          <End Type="brugaelModel.categoria" Role="categoria" Multiplicity="1" />
+          <End Type="brugaelModel.produtos" Role="produtos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categoria">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="produtos">
+              <PropertyRef Name="id_categoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="brugaelModelStoreContainer" CdmEntityContainer="brugaelEntities">
+          <EntitySetMapping Name="administradores">
+            <EntityTypeMapping TypeName="brugaelModel.administradores">
+              <MappingFragment StoreEntitySet="administradores">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="senha" ColumnName="senha" />
+                <ScalarProperty Name="telefone" ColumnName="telefone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="cpf" ColumnName="cpf" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="clientes">
+            <EntityTypeMapping TypeName="brugaelModel.clientes">
+              <MappingFragment StoreEntitySet="clientes">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="cpf" ColumnName="cpf" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="senha" ColumnName="senha" />
+                <ScalarProperty Name="telefone" ColumnName="telefone" />
+                <ScalarProperty Name="rua" ColumnName="rua" />
+                <ScalarProperty Name="numero" ColumnName="numero" />
+                <ScalarProperty Name="complemento" ColumnName="complemento" />
+                <ScalarProperty Name="bairro" ColumnName="bairro" />
+                <ScalarProperty Name="cidade" ColumnName="cidade" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="funcionarios">
+            <EntityTypeMapping TypeName="brugaelModel.funcionarios">
+              <MappingFragment StoreEntitySet="funcionarios">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="senha" ColumnName="senha" />
+                <ScalarProperty Name="telefone" ColumnName="telefone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="cpf" ColumnName="cpf" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pedidos">
+            <EntityTypeMapping TypeName="brugaelModel.pedidos">
+              <MappingFragment StoreEntitySet="pedidos">
+                <ScalarProperty Name="quantidade" ColumnName="quantidade" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_produto" ColumnName="id_produto" />
+                <ScalarProperty Name="id_dono" ColumnName="id_dono" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="produtos">
+            <EntityTypeMapping TypeName="brugaelModel.produtos">
+              <MappingFragment StoreEntitySet="produtos">
+                <ScalarProperty Name="id_categoria" ColumnName="id_categoria" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="descricao" ColumnName="descricao" />
+                <ScalarProperty Name="preco" ColumnName="preco" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="categoria">
+            <EntityTypeMapping TypeName="brugaelModel.categoria">
+              <MappingFragment StoreEntitySet="categoria">
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="brugaelModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="administradores">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="login" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="senha" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="telefone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="cpf" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="clientes">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nome" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="cpf" Type="String" MaxLength="17" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="login" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="senha" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="telefone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="rua" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="numero" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="complemento" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="bairro" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="cidade" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="pedidos" Relationship="Self.FK_pedidos_clientes" FromRole="clientes" ToRole="pedidos" />
+  </EntityType>
+  <EntityType Name="funcionarios">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="login" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="senha" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="telefone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="cpf" Type="String" MaxLength="17" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="pedidos">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_produto" Type="Int32" />
+    <Property Name="id_dono" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="clientes" Relationship="Self.FK_pedidos_clientes" FromRole="pedidos" ToRole="clientes" />
+    <NavigationProperty Name="produtos" Relationship="Self.FK_pedidos_produtos" FromRole="pedidos" ToRole="produtos" />
+  </EntityType>
+  <EntityType Name="produtos">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="descricao" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="preco" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <NavigationProperty Name="pedidos" Relationship="Self.FK_pedidos_produtos" FromRole="produtos" ToRole="pedidos" />
+  </EntityType>
+  <Association Name="FK_pedidos_clientes">
+    <End Role="clientes" Type="Self.clientes" Multiplicity="1" />
+    <End Role="pedidos" Type="Self.pedidos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="clientes">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="pedidos">
+        <PropertyRef Name="id_dono" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_pedidos_produtos">
+    <End Role="produtos" Type="Self.produtos" Multiplicity="0..1" />
+    <End Role="pedidos" Type="Self.pedidos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="produtos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="pedidos">
+        <PropertyRef Name="id_produto" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="brugaelEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="administradores" EntityType="Self.administradores" />
+    <EntitySet Name="clientes" EntityType="Self.clientes" />
+    <EntitySet Name="funcionarios" EntityType="Self.funcionarios" />
+    <EntitySet Name="pedidos" EntityType="Self.pedidos" />
+    <EntitySet Name="produtos" EntityType="Self.produtos" />
+    <AssociationSet Name="FK_pedidos_clientes" Association="Self.FK_pedidos_clientes">
+      <End Role="clientes" EntitySet="clientes" />
+      <End Role="pedidos" EntitySet="pedidos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_pedidos_produtos" Association="Self.FK_pedidos_produtos">
+      <End Role="produtos" EntitySet="produtos" />
+      <End Role="pedidos" EntitySet="pedidos" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
